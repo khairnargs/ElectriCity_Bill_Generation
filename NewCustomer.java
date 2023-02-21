@@ -1,0 +1,155 @@
+
+package electricity.billing.system;
+import javax.swing.*;
+import java.awt.*;
+import java.util.*;
+import java.awt.event.*;
+import java.sql.*;
+
+public class NewCustomer extends JFrame implements ActionListener{
+    JTextField tfname , tfaddress, tfstate, tfcity , tfemail, tfphone;
+    JButton next, cancel;
+    JLabel lblmeter;
+    
+    NewCustomer()
+        {
+            setSize(700,500);
+            setLocation(400,200);
+
+            JPanel p = new JPanel();
+            p.setLayout(null);
+            p.setBackground(Color.LIGHT_GRAY);
+            add(p);
+
+            JLabel heading = new JLabel("New Customer"); 
+            heading.setBounds(180,10,200,20);
+            p.add(heading);
+            heading.setFont(new Font("Tahuma",Font.PLAIN, 24));
+            
+        
+            JLabel lblname = new JLabel("Customer Name"); 
+            lblname.setBounds(100,80,200,20);
+            p.add(lblname);
+            
+            tfname = new JTextField();
+            tfname.setBounds(250,80,200,20);
+            p.add(tfname);
+            
+            JLabel lblmeterno = new JLabel("Meter Number"); 
+            lblmeterno.setBounds(100,120,100,20);
+            p.add(lblmeterno);
+            
+            lblmeter = new JLabel(""); 
+            lblmeter.setBounds(250,120,100,20);
+            p.add(lblmeter);
+            
+            Random ran = new Random();
+            long number = ran.nextLong() % 1000000;
+            lblmeter.setText(" "+Math.abs(number));
+            
+            JLabel lbladdress = new JLabel("Address"); 
+            lbladdress.setBounds(100,160,200,20);
+            p.add(lbladdress);
+            
+            tfaddress = new JTextField();
+            tfaddress.setBounds(250,160,200,20);
+            p.add(tfaddress);
+            
+            JLabel lblstate = new JLabel("State"); 
+            lblstate.setBounds(100,200,200,20);
+            p.add(lblstate);
+            
+            tfstate = new JTextField();
+            tfstate.setBounds(250,200,200,20);
+            p.add(tfstate);
+            
+            JLabel lblcity = new JLabel("City"); 
+            lblcity.setBounds(100,240,200,20);
+            p.add(lblcity);
+            
+            tfcity = new JTextField();
+            tfcity.setBounds(250,240,200,20);
+            p.add(tfcity);
+            
+            JLabel lblemail = new JLabel("Email"); 
+            lblemail.setBounds(100,280,200,20);
+            p.add(lblemail);
+            
+            tfemail = new JTextField();
+            tfemail.setBounds(250,280,200,20);
+            p.add(tfemail);
+            
+            JLabel lblphone = new JLabel("Phone no."); 
+            lblphone.setBounds(100,320,200,20);
+            p.add(lblphone);
+            
+            tfphone = new JTextField();
+            tfphone.setBounds(250,320,200,20);
+            p.add(tfphone);
+
+            next = new JButton("Next");
+            next.setBounds(120,390,100,20);
+            next.addActionListener(this);
+            p.add(next);
+            
+            cancel = new JButton("Cancel");
+            cancel.setBounds(300,390,100,20);
+            cancel.addActionListener(this);
+            p.add(cancel);
+            
+            setLayout(new BorderLayout());
+            
+            add(p, "Center");
+            
+            ImageIcon i1 = new ImageIcon(ClassLoader.getSystemResource("icon/hicon1.jpg"));
+            Image i2 = i1.getImage().getScaledInstance(150, 300, Image.SCALE_DEFAULT);
+            ImageIcon i3 = new ImageIcon(i2);
+            JLabel image = new JLabel(i3);
+            add(image,"East");
+            
+            getContentPane().setBackground(Color.WHITE);
+            
+            setVisible(true);
+        }
+    
+        public void actionPerformed(ActionEvent ae){
+            if (ae.getSource()== next){
+            String name = tfname.getText();
+            String meter = lblmeter.getText();
+            String address = tfaddress.getText();
+            String state = tfstate.getText();
+            String city = tfcity.getText();
+            String email = tfemail.getText();
+            String phone = tfphone.getText();
+            
+            String query1 = "insert into customer values('"+name+"', '"+meter+"', '"+address+"','"+state+"','"+city+"','"+email+"', '"+phone+"')";
+            String query2 = "insert into login values('"+meter+"', ' ' , '"+name+"' , ' ' , ' ' )";
+            
+            
+            try
+            {
+            Conn c = new Conn();
+            c.s.executeUpdate(query1);
+            c.s.executeUpdate(query2);
+            
+            JOptionPane.showMessageDialog(null, "Customer Details Added successfully!");
+            setVisible(false);
+            
+            //new frame
+            new Meterinfo(meter);
+            
+            }catch (Exception e)
+            {
+            e.printStackTrace();
+            }
+            
+            }else{
+                setVisible(false);
+            }
+        }
+    
+    public static void main(String args[]){
+        new NewCustomer();
+    }
+    
+}
